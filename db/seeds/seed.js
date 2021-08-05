@@ -1,6 +1,6 @@
 const db = require("../connection.js");
 const format = require("pg-format");
-const { formatCategoryData, formatUserData, formatReviewData } = require('../utils/data-manipulation');
+const { formatCategoryData, formatUserData, formatReviewData, createReviewRef, formatCommentData } = require('../utils/data-manipulation');
 
 const seed = (data) => {
   const { categoryData, commentData, reviewData, userData } = data;
@@ -35,11 +35,11 @@ const seed = (data) => {
       title VARCHAR(250) NOT NULL,
       review_body VARCHAR(10000) NOT NULL,
       designer VARCHAR(200),
-      review_image_url VARCHAR(2000) DEFAULT 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg',
+      review_img_url VARCHAR(2000) DEFAULT 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg',
       votes INT DEFAULT 0,
       category VARCHAR(200) REFERENCES categories(slug),
       owner VARCHAR(200) REFERENCES users(username),
-      created_at TIMESTAMPTZ 
+      created_at TIMESTAMP 
     );`)
     })
     .then(() => {
@@ -48,8 +48,8 @@ const seed = (data) => {
       author VARCHAR(200) REFERENCES users(username),
       review_id INT REFERENCES reviews(review_id),
       votes INT DEFAULT 0,
-      created_at TIMESTAMPTZ,
-      body VARCHAR(10000) NOT NULL
+      created_at TIMESTAMP,
+      body VARCHAR(10000)
     );`)
     })
     .then(() => {
@@ -76,19 +76,21 @@ const seed = (data) => {
       const formattedData = formatReviewData(reviewData);
       const reviewInsertStr = format(
         `INSERT INTO reviews
-        (title, review_body, designer, review_image_url, votes, category, owner, created_at)
+        (title, review_body, designer, review_img_url, votes, category, owner, created_at)
         VALUES %L RETURNING*
         `, formattedData
       )
       return db.query(reviewInsertStr);
     })
-    .then(() => {
-      const formattedData = formatReviewData(reviewData);
+    .then((reviewInsertResults) => {
+      const reviewRows = reviewInsertResults.rows;
+      const reviewRef = createReviewRef(reviewRows);
+      const formattedData = formatCommentData(commentData, reviewRef);
       const reviewInsertStr = format(
-        `INSERT INTO reviews
-        (title, review_body, designer, review_image_url, votes, category, owner, created_at)
-        VALUES %L RETURNING*
-        `, formattedData
+        `INSERT INTO comments
+      (author, review_id, votes, created_at, body)
+      VALUES %L RETURNING*
+      `, formattedData
       )
       return db.query(reviewInsertStr);
     })

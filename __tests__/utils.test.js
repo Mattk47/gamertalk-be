@@ -1,4 +1,4 @@
-const { formatCategoryData, formatUserData, formatReviewData } = require('../db/utils/data-manipulation')
+const { formatCategoryData, formatUserData, formatReviewData, createReviewRef, formatCommentData } = require('../db/utils/data-manipulation')
 
 describe('formatCategoryData', () => {
     test('returns an array when invoked with no arg', () => {
@@ -259,3 +259,177 @@ describe('formatReviewData', () => {
 
     });
 })
+
+describe('createReviewRef', () => {
+    it('should return an empty obj when passed an empty arr ', () => {
+        expect(typeof createReviewRef([])).toBe('object')
+    });
+    it('should return an obj {reviewName: reviewId} when passed an arr with one review obj  ', () => {
+        input = [
+            {
+                review_id: 1,
+                title: 'Agricola',
+                designer: 'Uwe Rosenberg',
+                owner: 'mallionaire',
+                review_img_url:
+                    'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                review_body: 'Farmyard fun!',
+                category: 'euro game',
+                created_at: new Date(1610964020514),
+                votes: 1
+            }
+        ]
+        expect(createReviewRef(input)).toEqual({ 'Agricola': 1 })
+    });
+    it('should return an obj with key-pairs: reviewName: reviewId when passed an arr with multiple review objects  ', () => {
+        input = [
+            {
+                review_id: 1,
+                title: 'Agricola',
+                designer: 'Uwe Rosenberg',
+                owner: 'mallionaire',
+                review_img_url:
+                    'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                review_body: 'Farmyard fun!',
+                category: 'euro game',
+                created_at: new Date(1610964020514),
+                votes: 1
+            }, {
+                review_id: 2,
+                title: 'Jenga',
+                designer: 'Leslie Scott',
+                owner: 'philippaclaire9',
+                review_img_url:
+                    'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                review_body: 'Fiddly fun for all the family',
+                category: 'dexterity',
+                created_at: new Date(1610964101251),
+                votes: 5
+            }
+        ]
+        expect(createReviewRef(input)).toEqual({ 'Agricola': 1, 'Jenga': 2 })
+    });
+    test('review objects remain unchanged', () => {
+        input = [
+            {
+                review_id: 1,
+                title: 'Agricola',
+                designer: 'Uwe Rosenberg',
+                owner: 'mallionaire',
+                review_img_url:
+                    'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                review_body: 'Farmyard fun!',
+                category: 'euro game',
+                created_at: new Date(1610964020514),
+                votes: 1
+            }]
+        createReviewRef(input);
+        expect(input[0]).toEqual({
+            review_id: 1,
+            title: 'Agricola',
+            designer: 'Uwe Rosenberg',
+            owner: 'mallionaire',
+            review_img_url:
+                'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+            review_body: 'Farmyard fun!',
+            category: 'euro game',
+            created_at: new Date(1610964020514),
+            votes: 1
+        })
+    });
+    test('returned object has different reference to memory than inputted review obj', () => {
+        input = [{
+            review_id: 1,
+            title: 'Agricola',
+            designer: 'Uwe Rosenberg',
+            owner: 'mallionaire',
+            review_img_url:
+                'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+            review_body: 'Farmyard fun!',
+            category: 'euro game',
+            created_at: new Date(1610964020514),
+            votes: 1
+        }]
+        expect(createReviewRef(input)).not.toBe(input[0])
+    });
+});
+
+describe('formatCommentData', () => {
+    test('should return an empty arr when passed an empty arr', () => {
+        expect(formatCommentData([])).toEqual([])
+    });
+    test('returns an array containing nested array holding each object values within', () => {
+        const input = [{
+            body: 'I loved this game too!',
+            belongs_to: 'Jenga',
+            created_by: 'bainesface',
+            votes: 16,
+            created_at: new Date(1511354613389)
+        },
+        {
+            body: 'My dog loved this game too!',
+            belongs_to: 'Ultimate Werewolf',
+            created_by: 'mallionaire',
+            votes: 13,
+            created_at: new Date(1610964545410)
+        }]
+        const reviewRef = {
+            'Jenga': 1,
+            'Ultimate Werewolf': 2
+        }
+        expect(formatCommentData(input, reviewRef)).toEqual([['bainesface', 1, 16, new Date(1511354613389), 'I loved this game too!'],
+        ['mallionaire', 2, 13, new Date(1610964545410), 'My dog loved this game too!']])
+    });
+    test('returns an array with different reference to memory', () => {
+        const input = [{
+            body: 'I loved this game too!',
+            belongs_to: 'Jenga',
+            created_by: 'bainesface',
+            votes: 16,
+            created_at: new Date(1511354613389)
+        },
+        {
+            body: 'My dog loved this game too!',
+            belongs_to: 'Ultimate Werewolf',
+            created_by: 'mallionaire',
+            votes: 13,
+            created_at: new Date(1610964545410)
+        }]
+        const reviewRef = {
+            'Jenga': 1,
+            'Ultimate Werewolf': 2
+        }
+        expect(formatCommentData(input, reviewRef)).not.toBe(input)
+    });
+    test('category objs remain unchanged', () => {
+        const input = [{
+            body: 'I loved this game too!',
+            belongs_to: 'Jenga',
+            created_by: 'bainesface',
+            votes: 16,
+            created_at: new Date(1511354613389)
+        },
+        {
+            body: 'My dog loved this game too!',
+            belongs_to: 'Ultimate Werewolf',
+            created_by: 'mallionaire',
+            votes: 13,
+            created_at: new Date(1610964545410)
+        }]
+        const reviewRef = {
+            'Jenga': 1,
+            'Ultimate Werewolf': 2
+        }
+        formatCommentData(input, reviewRef)
+        expect(input[0]).toEqual(
+            {
+                body: 'I loved this game too!',
+                belongs_to: 'Jenga',
+                created_by: 'bainesface',
+                votes: 16,
+                created_at: new Date(1511354613389)
+            }
+        )
+
+    });
+});
