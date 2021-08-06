@@ -1,4 +1,3 @@
-\c nc_games
+\c nc_games_test
 
-UPDATE reviews SET votes = votes - 5 
-    WHERE review_id = 1 RETURNING*;
+SELECT * FROM reviews ORDER BY created_at DESC;

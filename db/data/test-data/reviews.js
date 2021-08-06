@@ -29,7 +29,7 @@ module.exports = [
       'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
     review_body: "We couldn't find the werewolf!",
     category: 'social deduction',
-    created_at: new Date(1610964101251),
+    created_at: new Date(1610964101250),
     votes: 5
   },
   {

@@ -142,7 +142,7 @@ describe('formatReviewData', () => {
             review_body:
                 "You could sum up Agricola with the simple phrase 'Farmyeard Fun' but the mechanics and game play add so much more than that. You'll find yourself torn between breeding pigs, or sowing crops. Its joyeous and rewarding and it makes you think of time spent outside, which is much harder to do these days!",
             designer: 'Uwe Rosenberg',
-            review_image_url:
+            review_img_url:
                 'https://images.pexels.com/photos/4917821/pexels-photo-4917821.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
             votes: 1,
             category: 'strategy',
@@ -154,7 +154,7 @@ describe('formatReviewData', () => {
             review_body:
                 "Few games are equiped to fill a player with such a defined sense of mild-peril, but a friendly game of Jenga will turn the mustn't-make-it-fall anxiety all the way up to 11! Fiddly fun for all the family, this game needs little explaination. Whether you're a player who chooses to play it safe, or one who lives life on the edge, eventually the removal of blocks will destabilise the tower and all your Jenga dreams come tumbling down.",
             designer: 'Leslie Scott',
-            review_image_url:
+            review_img_url:
                 'https://images.pexels.com/photos/4009761/pexels-photo-4009761.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
             votes: 5,
             category: 'dexterity',

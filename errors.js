@@ -5,8 +5,10 @@ exports.handlePsqlErrors = (err, req, res, next) => {
 };
 
 exports.handleCustomErrors = (err, req, res, next) => {
-    if (err.status && err.msg) {
+    if (err.status == 404 && err.msg) {
         res.status(err.status).send({ msg: err.msg });
+    } else if (err.status == 400 && err.msg) {
+        res.status(err.status).send({ msg: err.msg })
     } else next(err);
 };
 
