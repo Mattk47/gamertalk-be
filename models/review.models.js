@@ -102,16 +102,25 @@ exports.selectCommentsByReview_id = (review_id) => {
      comments.votes, comments.created_at FROM comments 
     JOIN reviews ON reviews.review_id = comments.review_id
     WHERE comments.review_id = $1;`, [review_id])
-        .then(comments => {
-            console.log(comments.rows)
-            if (!comments.rows.length) {
+        .then(dbResults => {
+            if (dbResults.rows.length === 0) {
+                console.log('in hereee')
                 return checkExists('reviews', 'review_id', review_id)
+                    .then(() => {
+                        return dbResults.rows;
+                    })
             }
-            console.log(comments.rows)
-            return comments.rows;
+            return dbResults.rows;
         })
 }
 
 exports.addComment = (review_id, comment) => {
+    const { username, body } = comment
+    return db.query(`INSERT INTO comments(author, body, review_id) VALUES ($1, $2, $3) RETURNING*`,
+        [username, body, review_id])
+        .then(comment => {
+            console.log(comment.rows)
+            return comment.rows
+        })
 
 }

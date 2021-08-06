@@ -101,7 +101,7 @@ describe('PATCH /api/reviews/:review_id', () => {
     });
     test('status:400, responds with an error message when passed an incorrect type', () => {
         return request(app)
-            .patch('/api/reviews/ten')
+            .patch('/api/reviews/1')
             .send({ inc_votes: 'five' })
             .expect(400)
             .then(({ body }) => {
@@ -228,20 +228,22 @@ describe('GET /api/reviews/:review_id/comments', () => {
     });
 });
 
-describe.only('POST /api/reviews/:review_id/comments', () => {
+describe('POST /api/reviews/:review_id/comments', () => {
     test('should return status:200 and the newly posted comment', () => {
         return request(app).post('/api/reviews/1/comments').expect(201)
-            .then(({ body }) => {
+            .send({ comment: { username: 'mallionaire', body: 'The best review Ive ever layed my eyes on.' } }).then(({ body }) => {
                 expect(body.comment.length).toBe(1)
                 expect(Array.isArray(body.comment)).toBe(true);
                 expect(body.comment[0]).toMatchObject({
                     comment_id: expect.any(Number),
                     author: expect.any(String),
-                    review_id: expect(1),
-                    votes: expect(0),
+                    review_id: 1,
+                    votes: 0,
                     created_at: expect.any(String),
                     body: expect.any(String)
                 })
             })
     });
+    test
+
 });
