@@ -15,7 +15,7 @@ app.use(handlePsqlErrors);
 
 app.use(handleCustomErrors);
 
-app.use(handleServerErrors)
+app.use(handleServerErrors);
 
 
-module.exports = app
+module.exports = app;

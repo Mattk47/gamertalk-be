@@ -136,7 +136,6 @@ describe('GET /api/reviews', () => {
         return request(app).get('/api/reviews').expect(200)
             .then(({ body }) => {
                 expect(body.reviews).toBeSortedBy('created_at', { descending: true, })
-
             })
     });
     test('reviews are sorted title when title is passed as a query', () => {
@@ -440,7 +439,9 @@ describe('POST /api/reviews', () => {
             title: 'Bohemian Raspberry',
             review_body: 'I highly recommend this game',
             designer: 'Freddie Mercury',
-            category: 'euro game'
+            category: 'euro game',
+            review_img_url:
+                'https://images.ctfassets.net/3s5io6mnxfqz/wfAz3zUBbrcf1eSMLZi8u/c03ac28c778813bd72373644ee8b8b02/AdobeStock_364059453.jpeg?fm=jpg&w=900&fl=progressive'
         }
         ).then(({ body }) => {
             expect(body.addedReview).toMatchObject({
@@ -451,7 +452,8 @@ describe('POST /api/reviews', () => {
                 category: 'euro game',
                 review_id: 14,
                 votes: 0,
-                created_at: expect.any(String)
+                created_at: expect.any(String),
+                review_img_url: expect.any(String)
             })
         })
     });

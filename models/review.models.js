@@ -134,7 +134,7 @@ exports.addComment = (review_id, username, body) => {
 }
 
 exports.addReview = (review) => {
-    const { owner, title, review_body, designer, category } = review
+    const { owner, title, review_body, designer, category, review_img_url } = review
     if (!owner || !title || !review_body || !designer || !category) {
         return Promise.reject({
             status: 400,
@@ -142,8 +142,8 @@ exports.addReview = (review) => {
         });
     }
     return db.query(`INSERT INTO reviews(owner, title, review_body,
-         designer, category) VALUES($1, $2, $3, $4, $5)
-         RETURNING*;`, [owner, title, review_body, designer, category])
+         designer, category, review_img_url) VALUES($1, $2, $3, $4, $5, $6)
+         RETURNING*;`, [owner, title, review_body, designer, category, review_img_url])
         .then(commentData => {
             return commentData.rows[0];
         })
