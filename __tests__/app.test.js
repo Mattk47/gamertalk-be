@@ -112,7 +112,7 @@ describe('PATCH /api/reviews/:review_id', () => {
 
 });
 
-describe('GET /api/reviews', () => {
+describe.only('GET /api/reviews', () => {
     test('should return a status:200 and an obj with key: reviews and a value of an array of review objects', () => {
         return request(app).get('/api/reviews').expect(200).then(({ body }) => {
             expect(Array.isArray(body.reviews)).toBe(true);
