@@ -35,7 +35,7 @@ exports.updateReviewVotes = (inc_votes, review_id) => {
         })
 }
 
-exports.selectReviews = async (sort_by = 'created_at', order = 'desc', category, limit = 5, page = 1) => {
+exports.selectReviews = async (sort_by = 'created_at', order = 'desc', category, limit, page = 1) => {
     const validColumns = [
         'owner',
         'title',
