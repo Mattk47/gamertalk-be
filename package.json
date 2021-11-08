@@ -24,7 +24,8 @@
   "devDependencies": {
     "jest": "^27.0.6",
     "jest-sorted": "^1.0.12",
-    "supertest": "^6.1.4"
+    "mongodb-memory-server": "^7.4.0",
+    "supertest": "^6.1.6"
   },
   "dependencies": {
     "cors": "^2.8.5",

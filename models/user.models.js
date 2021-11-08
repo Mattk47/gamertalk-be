@@ -13,3 +13,8 @@ exports.selectUserByUsername = (username) => {
             return userData.rows[0];
         })
 }
+
+exports.selectReviewsByUsername = (username) => {
+    return db.query('SELECT * FROM reviews WHERE owner = $1', [username])
+        .then(reviewData => { return reviewData.rows })
+}

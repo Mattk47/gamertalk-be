@@ -69,6 +69,26 @@ describe('GET /api/reviews/:review_id', () => {
     });
 });
 
+describe('GET /api/users/reviews/:username', () => {
+    test('should return an array with a list of review objects corresponding with the username', () => {
+        return request(app).get('/api/users/reviews/mallionaire').expect(200).then(({ body }) => {
+            expect(Array.isArray(body.reviews)).toBe(true)
+            body.reviews.forEach(review => {
+                expect(review).toMatchObject({
+                    owner: expect.any(String),
+                    title: expect.any(String),
+                    review_id: expect.any(Number),
+                    review_body: expect.any(String),
+                    designer: expect.any(String),
+                    review_img_url: expect.any(String),
+                    category: expect.any(String),
+                    votes: expect.any(Number),
+                })
+            })
+        })
+    })
+});
+
 describe('PATCH /api/reviews/:review_id', () => {
     test('returns an updated review obj with votes increased by 5', () => {
         return request(app).patch('/api/reviews/1').expect(201)
@@ -112,7 +132,7 @@ describe('PATCH /api/reviews/:review_id', () => {
 
 });
 
-describe.only('GET /api/reviews', () => {
+describe('GET /api/reviews', () => {
     test('should return a status:200 and an obj with key: reviews and a value of an array of review objects', () => {
         return request(app).get('/api/reviews').expect(200).then(({ body }) => {
             expect(Array.isArray(body.reviews)).toBe(true);
@@ -440,8 +460,7 @@ describe('POST /api/reviews', () => {
             review_body: 'I highly recommend this game',
             designer: 'Freddie Mercury',
             category: 'euro game',
-            review_img_url:
-                'https://images.ctfassets.net/3s5io6mnxfqz/wfAz3zUBbrcf1eSMLZi8u/c03ac28c778813bd72373644ee8b8b02/AdobeStock_364059453.jpeg?fm=jpg&w=900&fl=progressive'
+            review_img_url: 'blah'
         }
         ).then(({ body }) => {
             expect(body.addedReview).toMatchObject({
@@ -462,7 +481,8 @@ describe('POST /api/reviews', () => {
             owner: 'mallionaire',
             title: 'Bohemian Raspberry',
             review_body: 'I highly recommend this game',
-            designer: 'Freddie Mercury'
+            designer: 'Freddie Mercury',
+
         })
             .then(({ body }) => {
                 expect(body.msg).toBe('Bad request')
